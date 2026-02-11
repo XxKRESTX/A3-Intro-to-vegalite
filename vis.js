@@ -4,25 +4,35 @@ async function fetchData() {
   return data;
 }
 
-fetchData().then(async (data) => {
+async function fetchDataLong() {
+  const data = await d3.csv("./dataset/videogames_long.csv");
+  return data;
+}
+
+async function main() {
+  const dataWide = await fetchData();
+  const dataLong = await fetchDataLong();
+
   const vlSpec = vl
     .markBar()
-    .data(data)
+    .data(dataWide)
     .encode(
       vl.y().fieldN("Platform").sort("-x"),
-      vl.x().fieldQ("Global_Sales").aggregate("sum")
+      vl.x().fieldQ("Global_Sales").aggregate("sum"),
+      vl.color().fieldN("Genre")
     )
     .width("container")
     .height(400)
     .toSpec();
 
   const vlSpec2 = vl
-    .markBar()
-    .data(data)
+    .markLine()
+    .data(dataWide)
     .encode(
-      vl.y().fieldN("Genre").sort("-x"),
-      vl.x().fieldQ("Global_Sales").aggregate("sum"),
-      vl.color().value("teal")
+      vl.x().fieldT("Year"),
+      vl.y().fieldQ("Global_Sales").aggregate("sum"),
+      vl.color().fieldN("Genre"),
+      vl.detail().fieldN("Platform")
     )
     .width("container")
     .height(400)
@@ -30,21 +40,26 @@ fetchData().then(async (data) => {
 
   const vlSpec3 = vl
     .markBar()
-    .data(data)
+    .data(dataLong)
     .encode(
-      vl.y().fieldN("Platform").sort("-x"),
-      vl.x().fieldQ("Region").aggregate("sum"),
-      vl.color().value("orange")
+      vl.x().fieldN("platform"),
+      vl.y().fieldQ("sales_amount").aggregate("sum"),
+      vl.color().fieldN("sales_region"),
+      
     )
     .width("container")
     .height(400)
     .toSpec();
 
-  render("#view", vlSpec);
-  render("#view2", vlSpec2);
-  render("#view3", vlSpec3);
-  render("#view4", vlSpec4);
-});
+  
+
+    render("#view4", vlSpec);
+    render("#view2", vlSpec2);
+    render("#view3", vlSpec3);
+    
+  }
+
+main();
 
 async function render(viewID, spec) {
   const result = await vegaEmbed(viewID, spec);

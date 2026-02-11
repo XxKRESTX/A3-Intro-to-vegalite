@@ -1,23 +1,50 @@
 var yourVlSpec = {
   $schema: "https://vega.github.io/schema/vega-lite/v5.json",
-  description: "A simple bar chart with embedded data.",
+  description: "Radial chart showing top consoles in Japan by sales",
   data: {
-    values: [
-      { a: "A", b: 28 },
-      { a: "B", b: 55 },
-      { a: "C", b: 43 },
-      { a: "D", b: 91 },
-      { a: "E", b: 81 },
-      { a: "F", b: 53 },
-      { a: "G", b: 19 },
-      { a: "H", b: 87 },
-      { a: "I", b: 52 },
-    ],
+    url: "./dataset/videogames_wide.csv"
   },
-  mark: "bar",
+  transform: [
+    {
+      aggregate: [{ op: "sum", field: "JP_Sales", as: "Total_JP_Sales" }],
+      groupby: ["Platform"]
+    },
+    {
+      window: [{ op: "rank", as: "rank" }],
+      sort: [{ field: "Total_JP_Sales", order: "descending" }]
+    },
+    { filter: "datum.rank <= 10" }
+  ],
+  layer: [
+    {
+      mark: { type: "arc", innerRadius: 50, stroke: "#fff" }
+    },
+    {
+      mark: { type: "text", radiusOffset: 15, fontSize: 11, fontWeight: "bold" },
+      encoding: {
+        text: { field: "Platform", type: "nominal" }
+      }
+    }
+  ],
   encoding: {
-    x: { field: "a", type: "ordinal" },
-    y: { field: "b", type: "quantitative" },
+    theta: { field: "Total_JP_Sales", type: "quantitative", stack: true },
+    radius: { 
+      field: "Total_JP_Sales", 
+      type: "quantitative",
+      scale: { type: "sqrt", zero: true, rangeMin: 20 }
+    },
+    color: { 
+      field: "Platform", 
+      type: "nominal",
+      scale: { scheme: "tableau20" },
+      legend: { title: "Top Consoles in Japan" }
+    },
+    tooltip: [
+      { field: "Platform", type: "nominal", title: "Console" },
+      { field: "Total_JP_Sales", type: "quantitative", title: "Total Sales (Millions)", format: ".2f" }
+    ]
   },
+  width: 400,
+  height: 400
 };
 vegaEmbed("#view", yourVlSpec);
