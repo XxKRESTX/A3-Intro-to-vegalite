@@ -14,7 +14,12 @@ body {
 #view,
 #view2,
 #view3,
-#view4 {
+#view4,
+#view5,
+#view6,
+#view7,
+#viewLifespan,
+#viewSalesVar {
   width: 100%;
   height: 100%;
   max-width: 800px;

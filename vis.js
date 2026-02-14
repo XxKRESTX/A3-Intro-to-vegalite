@@ -24,6 +24,7 @@ async function main() {
     .width("container")
     .height(400)
     .toSpec();
+    
 
   const vlSpec2 = vl
     .markLine()
@@ -40,23 +41,47 @@ async function main() {
 
   const vlSpec3 = vl
     .markBar()
-    .data(dataLong)
+    .data(dataWide)
     .encode(
-      vl.x().fieldN("platform"),
-      vl.y().fieldQ("sales_amount").aggregate("sum"),
-      vl.color().fieldN("sales_region"),
-      
+      vl.x().fieldN("Platform"),
+      vl.y().fieldQ("Global_Sales").aggregate("sum"),
+      vl.color().fieldN("Genre")
     )
     .width("container")
     .height(400)
     .toSpec();
 
-  
+  // Top Genres in North America
+  const vlSpecGenresNA = vl
+    .markBar()
+    .data(dataWide)
+    .encode(
+      vl.y().fieldN("Genre").sort("-x"),
+      vl.x().fieldQ("NA_Sales").aggregate("sum"),
+      vl.color().fieldN("Genre")
+    )
+    .width("container")
+    .height(300)
+    .toSpec();
+
+  // Top Genres in Europe
+  const vlSpecGenresEU = vl
+    .markBar()
+    .data(dataWide)
+    .encode(
+      vl.y().fieldN("Genre").sort("-x"),
+      vl.x().fieldQ("EU_Sales").aggregate("sum"),
+      vl.color().fieldN("Genre")
+    )
+    .width("container")
+    .height(300)
+    .toSpec();
 
     render("#view4", vlSpec);
     render("#view2", vlSpec2);
     render("#view3", vlSpec3);
-    
+    render("#view6", vlSpecGenresNA);
+    render("#view7", vlSpecGenresEU);
   }
 
 main();
