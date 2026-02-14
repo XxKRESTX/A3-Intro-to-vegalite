@@ -1,8 +1,5 @@
 # Assignment 3: Introduction to Data Visualization with Vega-Lite
 **Due Date:** February 16th, 11:55 PM
-
-[Link to Assignment on GitHub](https://github.com/SIAT-IAT-355/A3-Intro-to-vegalite)
-
 ## Objective
 
 In this assignment, you will create data visualizations using **Vega-Lite**. You will explore video game sales data and produce insightful visualizations to analyze trends, relationships, and patterns. The goal is to apply your knowledge of visualization design principles and get hands-on experience with Vega-Lite.
